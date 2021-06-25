@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Psychic</title>
+   <style>
+      @import url(./PaganSymbols.otf);
+
+      @font-face {
+         font-family: 'PaganSymbols';
+         src: url('./PaganSymbols.otf');
+         font-weight: normal;
+         font-style: normal;
+      }
+
+      * {
+         padding: 0;
+         box-sizing: border-box;
+         margin: 0;
+      }
+
+      body {
+         font-family: 'PaganSymbols';
+         text-align: center;
+         background-color: #000;
+         /* color: #fff; */
+      }
+
+      .wrapper {
+         width: 100%;
+         height: 100vh;
+         background-color: rgba(0, 0, 0, 1);
+         z-index: 50;
+         top: 0;
+         left: 0;
+         position: fixed;
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         display: none;
+      }
+
+      .box {
+         /* width: 403px; */
+         margin: 50px auto;
+         position: fixed;
+
+      }
+
+      .box .img-psychic {
+         max-width: 100%;
+         border-radius: 50%;
+      }
+
+      .box .hand {
+         /* background-color: rgba(255, 255, 255, 0.3); */
+         width: 100px;
+         height: 100px;
+         position: absolute;
+         top: 38%;
+         left: 58%;
+         display: flex;
+         justify-content: center;
+         align-items: center;
+      }
+
+      .box .hand p {
+         font-size: 4em;
+         /* font-weight: bold; */
+         color: #000;
+         opacity: 0;
+         /* animation: 7s random infinite linear; */
+         transition: all 2s;
+      }
+
+      .box-simbols {
+         display: flex;
+         flex-wrap: wrap;
+         justify-content: center;
+         align-items: center;
+
+      }
+
+      .simbols {
+         color: #fff;
+         font-size: 3em;
+         width: 50px;
+         font-weight: 100;
+      }
+
+      .number {
+         color: #fff;
+         font-family: sans-serif;
+      }
+
+      .mgs-result {
+         text-transform: uppercase;
+         color: gray;
+         font-family: sans-serif;
+         font-size: 2em;
+      }
+
+      .btn-read-mind {
+         padding: 20px 40px;
+         margin: 10px;
+         background-color: darkslateblue;
+         color: #fff;
+         border: 1px solid #ddd;
+         cursor: pointer;
+         font-size: 2em;
+         border-radius: 5px;
+      }
+
+      .box-rules {
+         color: #f1f1f1;
+         font-family: sans-serif;
+         text-align: left;
+         /* background-color: #f00; */
+         width: 100%;
+         max-width: 500px;
+         margin: 50px auto;
+      }
+
+      .box-rules p {
+         background-color: #444;
+         margin: 3px;
+         padding: 10px;
+         display: flex;
+         flex-direction: column;
+         justify-content: center;
+         align-items: flex-start;
+      }
+
+      .box-rules p span {
+         margin: 2px 0px;
+      }
+
+      .box-rules p span:nth-child(2) {
+         align-self: center;
+         color: #f00;
+      }
+
+      @keyframes random {
+         0% {
+            opacity: 0;
+         }
+
+         50% {
+            color: #000;
+            opacity: 1;
+         }
+
+         100% {
+            opacity: 0;
+         }
+      }
+   </style>
+</head>
+
+<body>
+   <div class="box-rules">
+      <p><span>1. Pense em um número aleatório entre 10 á 99</span> <span>(por exemplo, 28)</span></p>
+      <p><span>2. Some os dois dígitos do número escolhido</span> <span>(2 + 8 = 10)</span></p>
+      <p><span>3. Subtraia o resultado com o número escolhido</span> <span>(28 - 10 = 18)</span></p>
+      <p><span>4. Lembre-se do resultado</span> <span>(18)</span></p>
+   </div>
+   <button class="btn-read-mind">Ler sua Mente!</button>
+   <div class="wrapper">
+      <div class="box">
+         <img src="./psychic.jpg" alt="" class="img-psychic">
+         <p class="mgs-result">Estou entrando na sua mente!</p>
+         <div class="hand">
+            <p class="result"></p>
+         </div>
+
+      </div>
+
+   </div>
+   <!-- <p style="color: #fff; font-size: 3em;" class="ss">abcdefghijklmnop</p> -->
+   <div class="box-simbols"></div>
+   <!-- <p style="color: #fff; font-size: 3em;">abcdefghijklmnopqrstuvywz;.,1234567890</p> -->
+
+
+   <script>
+
+      const result = document.querySelector('.result')
+      const boxSimbols = document.querySelector('.box-simbols')
+      const btnReadMind = document.querySelector('.btn-read-mind')
+      const imgPsychic = document.querySelector('.img-psychic')
+      const wrapper = document.querySelector('.wrapper')
+
+      const gong = new Audio()
+      gong.src = './gong.wav'
+
+      let nSimbols = 38
+      let nFields = 96
+      let nRandomNumber = -1
+      let nCount = 0.1111111111111111
+      let simbols = 'abcdefghijklmnopqrstuvywz;.,1234567890'
+      let arrSimbols = simbols.split('')
+
+      let read
+
+      btnReadMind.onclick = () => {
+         result.innerHTML = read
+
+
+         wrapper.style.display = 'flex'
+         imgPsychic.src = './sharingan.gif'
+
+         setTimeout(() => {
+            imgPsychic.src = './psychic.jpg'
+            document.querySelector('.mgs-result').innerHTML = ''
+
+            setTimeout(() => {
+               document.querySelector('.hand p').style.opacity = '0.8'
+               gong.play()
+
+               setTimeout(() => { gong.pause() }, 5000)
+            }, 2000)
+         }, 5000)
+      }
+
+      function shuffle() {
+
+         nRandomNumber = getRandomNumber(0, nSimbols - 1)
+         // (nRandomNumber + 1)
+
+         console.log(nRandomNumber + 1, arrSimbols[nRandomNumber])
+         read = arrSimbols[nRandomNumber]
+
+         for (var i = 0; i < nFields; i++) {
+            var n = getRandomNumber(0, nSimbols - 1)
+            if (i > 0) {
+               n = (i + 1) % (((i % i) + 1) / nCount) ? getRandomNumber(0, nSimbols - 1) : nRandomNumber
+            }
+            console.log(i + 1, arrSimbols[n])
+            boxSimbols.innerHTML += `
+               <div style="display: flex; flex-direction: column; justify-content: center; background: rgba(255,255,255,.1); margin: 2px;">
+                  <p class="simbols">${arrSimbols[n]}</p>
+                  <p class="number">${i + 1}</p>
+               </div>
+            `
+         }
+
+      }
+
+      function getRandomNumber(nMin, nMax) {
+         var nRange = nMax - nMin + 1
+         do {
+            var nRnd = Math.floor(nRange * Math.random()) + nMin
+         } while (nRnd == nRandomNumber)
+         return nRnd
+      }
+
+      shuffle()
+   </script>
+</body>
+
+</html>
